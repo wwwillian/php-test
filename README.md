@@ -78,8 +78,8 @@ Para executar os testes, utilize o comando, na raiz do projeto:
 $ composer test
 ```
 
-[icon-travisci]: https://img.shields.io/travis/wwwillian/php-test.svg?style=flat-square
-[icon-codecov]: https://img.shields.io/codecov/c/github/wwwillian/php-test.svg?style=flat-square
+[icon-travisci]: https://www.travis-ci.com/wwwillian/php-test.svg?style=flat-square
+[icon-codecov]: https://codecov.io/gh/wwwillian/php-test/branch/master/graph/badge.svg?style=flat-square
 
-[link-travisci]: https://travis-ci.org/github/wwwillian/php-test
-[link-codecov]: https://app.codecov.io/gh/wwwillian/php-test
+[link-travisci]: https://www.travis-ci.com/wwwillian/php-test
+[link-codecov]: https://codecov.io/gh/wwwillian/php-test
