@@ -32,7 +32,7 @@ class MemoryCollection implements CollectionInterface
         if (!$this->has($index)) {
             return $defaultValue;
         }
-
+//        var_dump($this->data[$index]);
         return $this->data[$index];
     }
 
@@ -57,7 +57,8 @@ class MemoryCollection implements CollectionInterface
      */
     public function count(): int
     {
-        return count($this->data) + 1;
+//        var_dump(count($this->data));
+        return count($this->data);
     }
 
     /**
