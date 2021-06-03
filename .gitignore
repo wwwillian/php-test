@@ -1,5 +1,4 @@
 /vendor/
 /build/
 .phpunit*
-.idea
 *.txt
