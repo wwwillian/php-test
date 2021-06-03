@@ -4,16 +4,16 @@ namespace Live\Collection;
 
 use PHPUnit\Framework\TestCase;
 
-class MemoryCollectionTest extends TestCase
+class FileCollectionTest extends TestCase
 {
     /**
      * @test
      * @doesNotPerformAssertions
      */
-    public function objectCanBeConstructed()
+    public function objectCanBeConstructed(): FileCollection
     {
-        $collection = new MemoryCollection();
-        return $collection;
+        $file = 'test.txt';
+        return new FileCollection($file);
     }
 
     /**
@@ -21,23 +21,26 @@ class MemoryCollectionTest extends TestCase
      * @depends objectCanBeConstructed
      * @doesNotPerformAssertions
      */
-    public function dataCanBeAdded()
+    public function collectionCanBeAdded()
     {
-        $collection = new MemoryCollection();
+        $collection = new FileCollection('test.txt');
+        $collection->set('index', 'value', 35);
         $collection->set('index1', 'value');
         $collection->set('index2', 5);
         $collection->set('index3', true);
         $collection->set('index4', 6.5);
         $collection->set('index5', ['data']);
+        $collection->set('index6', ['data', 35]);
+        $collection->set('index7', ['data', 35, [9.0], 'name' => 'willian']);
     }
 
-     /**
+    /**
      * @test
-     * @depends dataCanBeAdded
+     * @depends collectionCanBeAdded
      */
-    public function dataCanBeRetrieved()
+    public function collectionCanBeRetrieved()
     {
-        $collection = new MemoryCollection();
+        $collection = new FileCollection('test.txt');
         $collection->set('index1', 'value');
 
         $this->assertEquals('value', $collection->get('index1'));
@@ -49,7 +52,7 @@ class MemoryCollectionTest extends TestCase
      */
     public function inexistentIndexShouldReturnDefaultValue()
     {
-        $collection = new MemoryCollection();
+        $collection = new FileCollection('new/test.txt');
 
         $this->assertNull($collection->get('index1'));
         $this->assertEquals('defaultValue', $collection->get('index1', 'defaultValue'));
@@ -61,22 +64,22 @@ class MemoryCollectionTest extends TestCase
      */
     public function newCollectionShouldNotContainItems()
     {
-        $collection = new MemoryCollection();
+        $collection = new FileCollection('new/test.txt');
         $this->assertEquals(0, $collection->count());
     }
 
     /**
      * @test
-     * @depends dataCanBeAdded
+     * @depends collectionCanBeAdded
      */
     public function collectionWithItemsShouldReturnValidCount()
     {
-        $collection = new MemoryCollection();
+        $collection = new FileCollection('test.txt');
         $collection->set('index1', 'value');
         $collection->set('index2', 5);
         $collection->set('index3', true);
 
-        $this->assertEquals(3, $collection->count());
+        $this->assertEquals(8, $collection->count());
     }
 
     /**
@@ -85,9 +88,9 @@ class MemoryCollectionTest extends TestCase
      */
     public function collectionCanBeCleaned()
     {
-        $collection = new MemoryCollection();
+        $collection = new FileCollection('test.txt');
         $collection->set('index', 'value');
-        $this->assertEquals(1, $collection->count());
+        $this->assertEquals(8, $collection->count());
 
         $collection->clean();
         $this->assertEquals(0, $collection->count());
@@ -95,11 +98,11 @@ class MemoryCollectionTest extends TestCase
 
     /**
      * @test
-     * @depends dataCanBeAdded
+     * @depends collectionCanBeAdded
      */
     public function addedItemShouldExistInCollection()
     {
-        $collection = new MemoryCollection();
+        $collection = new FileCollection('test.txt');
         $collection->set('index', 'value');
 
         $this->assertTrue($collection->has('index'));
@@ -107,11 +110,47 @@ class MemoryCollectionTest extends TestCase
 
     /**
      * @test
-     * @depends dataCanBeAdded
+     */
+    public function canReadFile()
+    {
+        $collection = new FileCollection('test-read.txt');
+        $collection->set('index', 'value');
+
+        $read = [
+            'index' => [
+                'text' => 'value',
+                'token' => time()+1
+            ]
+        ];
+
+        $this->assertEquals($read, $collection->read('test-read.txt'));
+    }
+
+    /**
+     * @test
+     */
+    public function canWriteToFile()
+    {
+        $collection = new FileCollection('test-read.txt');
+
+        $write = [
+            'index' => [
+                'text' => 'value1',
+                'token' => time()+1
+            ]
+        ];
+
+        $collection->write($write);
+        $this->assertEquals(null, $collection->read('test-read.txt'));
+    }
+
+    /**
+     * @test
+     * @depends collectionCanBeAdded
      */
     public function checkIfTokenExpires()
     {
-        $collection = new MemoryCollection();
+        $collection = new FileCollection('test.txt');
         $collection->set('index', 'value');
 
         sleep(2);
@@ -125,7 +164,7 @@ class MemoryCollectionTest extends TestCase
      */
     public function equalTimeCheckIfTokenDoesNotExpire()
     {
-        $collection = new MemoryCollection();
+        $collection = new FileCollection('test.txt');
         $collection->set('index', 'value', 2);
 
         sleep(2);

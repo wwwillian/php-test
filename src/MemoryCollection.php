@@ -33,15 +33,21 @@ class MemoryCollection implements CollectionInterface
             return $defaultValue;
         }
 
-        return $this->data[$index];
+        if ($this->data[$index]['token'] < time()) {
+            return null;
+        }
+
+        return $this->data[$index]['text'];
     }
 
     /**
      * {@inheritDoc}
      */
-    public function set(string $index, $value)
+    public function set(string $index, $value, int $time = 1)
     {
-        $this->data[$index] = $value;
+        $token = time() + $time;
+
+        $this->data[$index] = ['text' => $value, 'token' => $token];
     }
 
     /**
@@ -57,7 +63,7 @@ class MemoryCollection implements CollectionInterface
      */
     public function count(): int
     {
-        return count($this->data) + 1;
+        return count($this->data);
     }
 
     /**

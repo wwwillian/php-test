@@ -27,7 +27,7 @@
         }
     },
     "scripts": {
-        "test": "phpunit --testdox --colors=always",
+        "test": "php -n -dzend_extension=xdebug -dxdebug.mode=coverage ./vendor/bin/phpunit --coverage-text",
         "check": "phpcs -p --standard=phpcs.xml"
     },
     "config": {
