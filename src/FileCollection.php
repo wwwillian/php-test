@@ -25,29 +25,6 @@ class FileCollection implements CollectionInterface
     }
 
     /**
-     * @param string $path
-     * @return mixed
-     */
-    public function read(string $path)
-    {
-        $fp = fopen($path, 'r');
-        $content =  fread($fp, filesize($path));
-        fclose($fp);
-
-        return json_decode($content, true);
-    }
-
-    /**
-     * @param array $data
-     */
-    public function write(array $data)
-    {
-        $fp = fopen($this->path, 'a+');
-        fwrite($fp, json_encode($data));
-        fclose($fp);
-    }
-
-    /**
      * @param string $index
      * @param null $defaultValue
      * @return mixed|null
@@ -70,13 +47,13 @@ class FileCollection implements CollectionInterface
      * @param mixed $value
      * @param int $time
      */
-    public function set(string $index, $value, int $time = 33)
+    public function set(string $index, $value, int $time = 1)
     {
         $token = time() + $time;
 
         $this->collection[$index] = ['text' => $value, 'token' => $token];
 
-        $this->write($this->collection[$index]);
+        $this->write($this->collection);
     }
 
     /**
@@ -85,6 +62,10 @@ class FileCollection implements CollectionInterface
      */
     public function has(string $index)
     {
+        if ($this->collection === null) {
+            return false;
+        }
+
         return array_key_exists($index, $this->collection);
     }
 
@@ -102,5 +83,29 @@ class FileCollection implements CollectionInterface
     public function clean()
     {
         $this->collection = [];
+    }
+
+    /**
+     * @return void
+     */
+    public function write(array $collection)
+    {
+        $fp = fopen($this->path, 'w');
+        fwrite($fp, json_encode($collection));
+        fclose($fp);
+    }
+
+    /**
+     * @param string $path
+     * @return mixed
+     */
+    public function read(string $path)
+    {
+        $fp = fopen($path, 'r');
+        $content =  fread($fp, filesize($path));
+        $text = "$content";
+        fclose($fp);
+
+        return json_decode($text, true);
     }
 }
