@@ -57,18 +57,26 @@ class FileCollection implements CollectionInterface
         if (!$this->has($index)) {
             return $defaultValue;
         }
-        return $this->collection[$index];
+
+        if ($this->collection[$index]['token'] < time()) {
+            return null;
+        }
+
+        return $this->collection[$index]['text'];
     }
 
     /**
      * @param string $index
      * @param mixed $value
+     * @param int $time
      */
-    public function set(string $index, $value)
+    public function set(string $index, $value, int $time = 33)
     {
-        $this->collection[$index] = [$value];
+        $token = time() + $time;
 
-        $this->write([$value]);
+        $this->collection[$index] = ['text' => $value, 'token' => $token];
+
+        $this->write($this->collection[$index]);
     }
 
     /**
