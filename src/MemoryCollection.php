@@ -43,7 +43,7 @@ class MemoryCollection implements CollectionInterface
     /**
      * {@inheritDoc}
      */
-    public function set(string $index, $value, int $time = 33)
+    public function set(string $index, $value, int $time = 1)
     {
         $token = time() + $time;
 
