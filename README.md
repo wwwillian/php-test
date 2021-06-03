@@ -79,7 +79,7 @@ $ composer test
 ```
 
 [icon-travisci]: https://www.travis-ci.com/wwwillian/php-test.svg?style=flat-square
-[icon-codecov]: https://codecov.io/gh/wwwillian/php-test/branch/develop/graph/badge.svg?token=L12ZV87FGE?style=flat-square
+[icon-codecov]: https://codecov.io/gh/wwwillian/php-test/branch/master/graph/badge.svg?token=L12ZV87FGE?style=flat-square
 
 [link-travisci]: https://www.travis-ci.com/wwwillian/php-test
 [link-codecov]: https://codecov.io/gh/wwwillian/php-test
